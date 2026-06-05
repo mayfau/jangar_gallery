@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Андрей Санджиев • Галерея</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-main: #111111;
+            --text-muted: #666666;
+            --font-gallery: "Georgia", "Times New Roman", serif;
+            --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-gallery);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Шапка сайта */
+        header {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 20px 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 32px;
+            font-weight: normal;
+            letter-spacing: 3px;
+            margin: 0 0 15px 0;
+            text-transform: uppercase;
+        }
+
+        header .subtitle {
+            font-size: 15px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin: 0 0 30px 0;
+        }
+
+        header .about-epos {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 15px;
+            font-style: italic;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        /* Навигация по сериям */
+        .gallery-nav {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 40px 0;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .gallery-nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            padding-bottom: 4px;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .gallery-nav a.active, .gallery-nav a:hover {
+            border-bottom: 1px solid var(--text-main);
+        }
+
+        /* Сетка экспонатов */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 60px 40px;
+            max-width: 1100px;
+            margin: 0 auto 80px auto;
+            padding: 0 20px;
+            align-items: start;
+        }
+
+        /* Карточка картины без границ и теней */
+        .painting-card {
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            height: auto;
+        }
+
+        .painting-img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            transition: opacity 0.3s ease;
+        }
+
+        .painting-img:hover {
+            opacity: 0.85;
+        }
+
+        /* Музейная экспликация (подпись) */
+        .card-body {
+            padding: 15px 0 0 0;
+            text-align: left;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 0 6px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-style: italic;
+            margin: 0 0 8px 0;
+        }
+
+        .price {
+            font-size: 14px;
+            color: var(--text-main);
+            margin: 0;
+            font-weight: normal;
+        }
+
+        /* Состояние загрузки и пустоты */
+        .status-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-style: italic;
+            color: var(--text-muted);
+            padding: 40px 0;
+        }
+
+        /* Футер и техническая зона */
+        footer {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            border-top: 1px solid #eeeeee;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-family: var(--font-ui);
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-right: 15px;
+        }
+
+        .author-zone-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .author-zone-btn:hover {
+            color: var(--text-main);
+        }
+
+        /* Панель управления автора (строгий стиль) */
+        .admin-panel {
+            display: none;
+            max-width: 450px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fbfbfb;
+            border: 1px solid #e5e5ea;
+            font-family: var(--font-ui);
+        }
+
+        .admin-panel h2 {
+            font-size: 18px;
+            margin-top: 0;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            background: #ffffff;
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: var(--font-ui);
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #111111;
+            outline: none;
+        }
+
+        .btn-submit {
+            background: #111111;
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            background: #333333;
+        }
+
+        .btn-logout {
+            background: none;
+            border: 1px solid #cccccc;
+            color: var(--text-main);
+            padding: 8px 15px;
+            font-size: 12px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Андрей Санджиев</h1>
+        <div class="subtitle">Художник • Создатель серии</div>
+        <p class="about-epos">
+            «Джангар» — монументальный калмыцкий эпос о легендарной стране Бумбе, где люди живут в вечной молодости, мире и справедливости. Весь цикл из 13 картин принадлежит кисти Андрея Санджиева, передавая внутреннюю философию и глубокое состояние этой вселенной. Сюжеты рекомендуется смотреть последовательно, как главы одной саги.
+        </p>
+    </header>
+
+    <div class="gallery-nav">
+        <a href="#" class="active">Коллекция «Джангар»</a>
+        <a href="#">Вне серии</a>
+    </div>
+
+    <main class="gallery-grid" id="galleryGrid">
+        <div class="status-message">Загрузка экспозиции...</div>
+    </main>
+
+    <section class="admin-panel" id="adminPanel">
+        <div id="authBlock">
+            <h2>Вход в режим автора</h2>
+            <div class="form-group">
+                <label for="passwordInput">Секретный пароль</label>
+                <input type="password" id="passwordInput" placeholder="Введите пароль">
+            </div>
+            <button class="btn-submit" onclick="handleLogin()">Войти</button>
+        </div>
+
+        <div id="uploadBlock" style="display: none;">
+            <h2>Добавление нового сюжета</h2>
+            <div class="form-group">
+                <label for="title">Название картины</label>
+                <input type="text" id="title" placeholder="Например: Богатырь Хонгор">
+            </div>
+            <div class="form-group">
+                <label for="description">Описание / Сюжет эпоса</label>
+                <textarea id="description" rows="4" placeholder="Текст из саги или описание холста..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">Стоимость (₽)</label>
+                <input type="number" id="price" placeholder="Например: 150000">
+            </div>
+            <div class="form-group">
+                <label for="imageUrl">Ссылка на изображение</label>
+                <input type="url" id="imageUrl" placeholder="https://...">
+            </div>
+            <button class="btn-submit" onclick="handleUpload()">Опубликовать на выставку</button>
+            <button class="btn-logout" onclick="handleLogout()">Выйти из панели</button>
+        </div>
+    </section>
+
+    <footer>
+        <div>
+            <a href="https://t.me/Sanan1503" target="_blank">Telegram</a>
+            <a href="https://www.instagram.com/andreysan1503/" target="_blank">Instagram</a>
+        </div>
+        <div>
+            <button class="author-zone-btn" onclick="toggleAdminPanel()">Режим автора</button>
+        </div>
+    </footer>
+ <script>
+        const API_URL = "https://jangar-gallery.onrender.com";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadPaintings();
+            checkAuthStatus();
+        });
+
+        // 1. Загрузка картин с проверкой прав автора
+        async function loadPaintings() {
+            const grid = document.getElementById("galleryGrid");
+            const token = localStorage.getItem("author_token"); // Проверяем, залогинен ли автор прямо сейчас
+            
+            try {
+                const response = await fetch(`${API_URL}/paintings/`);
+                if (!response.ok) throw new Error("Ошибка сервера");
+                
+                const paintings = await response.json();
+                grid.innerHTML = "";
+
+                if (paintings.length === 0) {
+                    grid.innerHTML = '<div class="status-message">В экспозиции «Джангар» пока нет сюжетов.</div>';
+                    return;
+                }
+
+                paintings.forEach(p => {
+                    const card = document.createElement("div");
+                    card.className = "painting-card";
+                    
+                    // Если токен есть, создаем аккуратную текстовую кнопку удаления
+                    const deleteButtonHtml = token 
+                        ? `<button onclick="handleDelete(${p.id})" style="background:none; border:none; color:#ff3b30; font-family:var(--font-ui); font-size:12px; cursor:pointer; padding:0; margin-top:10px; text-transform:uppercase; letter-spacing:0.5px;">[ Удалить холст ]</button>`
+                        : "";
+
+                    card.innerHTML = `
+                        <img src="${p.image_url || 'https://via.placeholder.com/400x500?text=Нет+изображения'}" alt="${p.title}" class="painting-img">
+                        <div class="card-body">
+                            <h3 class="card-title">${p.title}</h3>
+                            <p class="card-description">${p.description || ''}</p>
+                            <p class="price">${Number(p.price).toLocaleString()} ₽</p>
+                            ${deleteButtonHtml}
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error(error);
+                grid.innerHTML = '<div class="status-message">Не удалось подключиться к серверу бэкенда. Убедитесь, что Uvicorn запущен.</div>';
+            }
+        }
+
+        // 2. Функция отправки запроса на УДАЛЕНИЕ в бэкенд
+        async function handleDelete(paintingId) {
+            if (!confirm("Вы уверены, что хотите убрать эту картину из экспозиции?")) return;
+
+            const token = localStorage.getItem("author_token");
+            try {
+                const response = await fetch(`${API_URL}/paintings/${paintingId}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    alert("Картина удалена");
+                    loadPaintings(); // Мгновенно обновляем галерею на экране
+                } else {
+                    alert("Не удалось удалить картину");
+                }
+            } catch (error) {
+                alert("Ошибка соединения с бэкендом");
+            }
+        }
+
+        function toggleAdminPanel() {
+            const panel = document.getElementById("adminPanel");
+            panel.style.display = (panel.style.display === "block") ? "none" : "block";
+            panel.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function checkAuthStatus() {
+            const token = localStorage.getItem("author_token");
+            const authBlock = document.getElementById("authBlock");
+            const uploadBlock = document.getElementById("uploadBlock");
+
+            if (token) {
+                authBlock.style.display = "none";
+                uploadBlock.style.display = "block";
+            } else {
+                authBlock.style.display = "block";
+                uploadBlock.style.display = "none";
+            }
+        }
+
+        async function handleLogin() {
+            const password = document.getElementById("passwordInput").value;
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ password: password })
+                });
+
+                if (!response.ok) {
+                    alert("Неверный секретный пароль автора!");
+                    return;
+                }
+
+                const data = await response.json();
+                localStorage.setItem("author_token", data.access_token);
+                checkAuthStatus();
+                loadPaintings(); // Перерисовываем картины, чтобы появились кнопки удаления
+                document.getElementById("passwordInput").value = "";
+            } catch (error) {
+                alert("Ошибка при попытке авторизации");
+            }
+        }
+
+        async function handleUpload() {
+            const title = document.getElementById("title").value;
+            const description = document.getElementById("description").value;
+            const price = document.getElementById("price").value;
+            const imageUrl = document.getElementById("imageUrl").value;
+            const token = localStorage.getItem("author_token");
+
+            if (!title || !price || !imageUrl) {
+                alert("Пожалуйста, заполните обязательные поля (Название, Цена, Ссылка)");
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/paintings/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        description: description,
+                        price: parseInt(price),
+                        image_url: imageUrl
+                    })
+                });
+
+                if (response.status === 401) {
+                    alert("Сессия истекла. Войдите заново.");
+                    handleLogout();
+                    return;
+                }
+
+                if (response.ok) {
+                    alert("Картина успешно добавлена!");
+                    document.getElementById("title").value = "";
+                    document.getElementById("description").value = "";
+                    document.getElementById("price").value = "";
+                    document.getElementById("imageUrl").value = "";
+                    loadPaintings();
+                } else {
+                    alert("Произошла ошибка при сохранении картины");
+                }
+            } catch (error) {
+                alert("Нет связи с сервером бэкенда");
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem("author_token");
+            checkAuthStatus();
+            loadPaintings(); // Перерисовываем картины, чтобы кнопки удаления исчезли
+        }
+    </script>
+</body>
+</html>
