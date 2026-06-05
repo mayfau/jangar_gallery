@@ -10,9 +10,8 @@ if DATABASE_URL.startswith("postgres://") or DATABASE_URL.startswith("postgresql
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
     
-    if "sslmode=" in DATABASE_URL:
-        DATABASE_URL = DATABASE_URL.replace("sslmode=require", "")
-        DATABASE_URL = DATABASE_URL.rstrip("?").rstrip("&")
+    if "?" in DATABASE_URL:
+        DATABASE_URL = DATABASE_URL.split("?")[0]
     
     connect_args = {"ssl": True}
 
